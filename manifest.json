@@ -1,0 +1,17 @@
+{
+  "name": "Умножайка — таблица умножения",
+  "short_name": "Умножайка",
+  "description": "Тренажёр таблицы умножения для 2-4 классов",
+  "lang": "ru",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff4d6",
+  "theme_color": "#6c4cf5",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
