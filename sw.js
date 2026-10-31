@@ -1,5 +1,5 @@
 // Сохраняет приложение в телефоне, чтобы оно работало без интернета
-const CACHE = 'umnozhayka-v3';
+const CACHE = 'umnozhayka-v4';
 const FILES = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {

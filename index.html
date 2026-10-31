@@ -344,9 +344,9 @@ function start(t) {
   const color = t === 'all' ? '#7b5cff' : COLORS[t];
   document.body.style.setProperty('--c', color);
   Object.assign(st, { ok: 0, bad: 0, done: 0, firstTry: 0, locked: false, last: '' });
-  st.queue = st.play === 'calm' ? buildQueue() : [];
+  st.queue = st.mode === 'calm' ? buildQueue() : [];
   show('game');
-  if (st.play === 'time') {
+  if (st.mode === 'time') {
     st.endAt = Date.now() + TIME * 1000;
     clearInterval(st.tick);
     st.tick = setInterval(timeTick, 100);
@@ -357,7 +357,7 @@ function start(t) {
 
 function next() {
   st.typed = ''; st.locked = false;
-  st.cur = st.play === 'calm' ? st.queue.shift() : randomTask();
+  st.cur = st.mode === 'calm' ? st.queue.shift() : randomTask();
   if (!st.cur) return finish();
   $('a').textContent = st.cur.x; $('b').textContent = st.cur.y; $('sign').textContent = st.cur.s;
   $('ex').classList.toggle('long', String(st.cur.x).length + String(st.cur.y).length + String(st.cur.r).length > 5);
@@ -372,7 +372,7 @@ function drawAnswer() {
 }
 
 function drawTop() {
-  if (st.play === 'calm') {
+  if (st.mode === 'calm') {
     $('count').textContent = Math.min(st.done + 1, ROUND + st.queue.length) + '/' + (st.done + st.queue.length + (st.cur ? 1 : 0));
     const total = st.done + st.queue.length + (st.cur ? 1 : 0);
     $('barFill').style.width = (st.done / total * 100) + '%';
@@ -419,7 +419,7 @@ function check(right) {
     card.className = 'card no';
     $('hint').innerHTML = `Правильно: ${st.cur.x} ${st.cur.s} ${st.cur.y} = <b style="color:var(--good)">${right}</b>`;
     buzz();
-    if (st.play === 'calm') {
+    if (st.mode === 'calm') {
       // Ошибку повторим в конце круга
       st.queue.push({ ...st.cur, retry: true });
     } else st.done++;
@@ -434,7 +434,7 @@ function finish() {
   st.cur = null; st.locked = true;
   let stars, num, txt, mini = '';
   $('newRec').hidden = true;
-  if (st.play === 'calm') {
+  if (st.mode === 'calm') {
     const total = st.table === 'all' ? ROUND : 10;
     num = st.firstTry + '/' + total;
     stars = st.firstTry === total ? 3 : st.firstTry >= total * 0.7 ? 2 : 1;
