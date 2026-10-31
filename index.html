@@ -273,7 +273,13 @@ function fxStep() {
 // ---------- Главный экран ----------
 const OP_NAME = { mul: 'Умножение', div: 'Деление', mix: 'Умножение и деление' };
 const OP_SIGN = { mul: '×', div: ':', mix: '×:' };
-function tableLabel(t) { return t === 'all' ? 'вперемешку' : 'на ' + t; }
+// На ноль делить нельзя: в делении таблица «0» — это деление самого нуля (0 : 5)
+function zeroDiv(t) { return t === 0 && st.op !== 'mul'; }
+function tableLabel(t) {
+  if (t === 'all') return 'вперемешку';
+  if (zeroDiv(t)) return st.op === 'div' ? 'нуля' : 'с нулём';
+  return 'на ' + t;
+}
 // Рекорды умножения хранятся под старым ключом, чтобы не потерялись
 function recordKey(t) { return st.op === 'mul' ? 'best_' + t : 'best_' + st.op + '_' + t; }
 
@@ -284,7 +290,9 @@ function renderTables() {
     const b = document.createElement('button');
     b.className = 'tbl' + (t === 'all' ? ' all' : '');
     if (t !== 'all') b.style.setProperty('--c', COLORS[t]);
-    b.innerHTML = t === 'all' ? '🎲 Все таблицы вперемешку' : `${OP_SIGN[st.op]}${t}<small>на ${t}</small>`;
+    b.innerHTML = t === 'all' ? '🎲 Все таблицы вперемешку'
+      : zeroDiv(t) ? `0${OP_SIGN[st.op]}<small>${st.op === 'div' ? 'делим ноль' : 'с нулём'}</small>`
+      : `${OP_SIGN[st.op]}${t}<small>на ${t}</small>`;
     const best = store.get(recordKey(t), 0);
     if (st.mode === 'time' && best) b.insertAdjacentHTML('beforeend', `<span class="rec">🏆${best}</span>`);
     b.onclick = () => start(t);
