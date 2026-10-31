@@ -373,8 +373,9 @@ function drawAnswer() {
 
 function drawTop() {
   if (st.mode === 'calm') {
-    $('count').textContent = Math.min(st.done + 1, ROUND + st.queue.length) + '/' + (st.done + st.queue.length + (st.cur ? 1 : 0));
-    const total = st.done + st.queue.length + (st.cur ? 1 : 0);
+    // Пример, уже учтённый в done или переложенный в очередь, второй раз не считаем
+    const total = st.done + st.queue.length + (st.cur && !st.cur.counted ? 1 : 0);
+    $('count').textContent = Math.min(st.done + 1, total) + '/' + total;
     $('barFill').style.width = (st.done / total * 100) + '%';
     $('score').innerHTML = `✅ <b>${st.ok}</b> &nbsp; ❌ <span class="x">${st.bad}</span>`;
   } else {
@@ -412,6 +413,7 @@ function check(right) {
     setTimeout(() => p.remove(), 900);
     firework();
     beep([660, 880, 1175], 0.08);
+    st.cur.counted = true;
     st.done++; drawTop();
     setTimeout(next, 650);
   } else {
@@ -422,6 +424,7 @@ function check(right) {
     if (st.mode === 'calm') {
       // Ошибку повторим в конце круга
       st.queue.push({ ...st.cur, retry: true });
+      st.cur.counted = true;
     } else st.done++;
     drawTop();
     setTimeout(() => { $('ans').textContent = right; }, 350);
